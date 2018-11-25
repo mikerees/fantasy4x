@@ -1,0 +1,19 @@
+FANTASY 4X
+########
+
+A user has one kingdom
+A kingdom has the 8 cardinal directions
+A user can build buildings in a kingdom
+A user can level up a building
+A user can train military units
+A user can recruit mercenaries
+A user can cast spells
+A user can gather and spend resources
+A user can research new buildings, spells, units or technologies
+A building, spell, unit or technology can have prerequisite technologies
+A building, spell or unit has a resource cost.
+
+Game operates with ticks.
+A tick represents an action.
+A user gains a tick after a set period of time or by discovering ticks.
+A spell can generate ticks.

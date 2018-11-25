@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Models\{{typeName}}s;
+
+class {{modelName}} extends {{typeName}}
+{
+
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+}
