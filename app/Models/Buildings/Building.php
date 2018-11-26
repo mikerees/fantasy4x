@@ -3,6 +3,8 @@
 
 namespace App\Models\Buildings;
 
+use App\Actions\Action;
+
 abstract class Building
 {
 
@@ -54,11 +56,17 @@ abstract class Building
         return $this->coefficient;
     }
 
+    /**
+     * @return Action[]
+     */
     public function getPassiveActions()
     {
         return $this->passiveActions;
     }
 
+    /**
+     * @return Action[]
+     */
     public function getActiveActions()
     {
         return $this->activeActions;

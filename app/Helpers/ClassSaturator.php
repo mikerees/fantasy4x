@@ -4,7 +4,6 @@
 namespace App\Helpers;
 
 
-use http\Exception\InvalidArgumentException;
 use Illuminate\Database\Eloquent\Model;
 
 class ClassSaturator
@@ -19,7 +18,7 @@ class ClassSaturator
     {
 
         if (!isset($entity->class)) {
-            throw new InvalidArgumentException("Model passed is insatiable");
+            throw new \InvalidArgumentException("Model passed is insatiable");
         }
 
         $model = self::instantiateClass($entity->class);

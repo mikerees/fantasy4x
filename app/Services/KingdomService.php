@@ -3,16 +3,17 @@
 namespace App\Services;
 
 use App\Entities\Kingdom;
+use App\Models\Kingdom as KingdomModel;
 use App\Helpers\ClassSaturator;
 use App\Models\Resources\Resource;
 
 class KingdomService
 {
 
-    public function hasResources(Kingdom $kingdom, $cost)
+    public function hasResources(KingdomModel $kingdom, $cost)
     {
         foreach ($cost as $class => $val) {
-            $resources = $kingdom->resources;
+            $resources = $kingdom->entity->resources;
             $found = false;
             foreach ($resources as $resource) {
 
@@ -32,11 +33,11 @@ class KingdomService
         return true;
     }
 
-    public function giftResource(Kingdom $kingdom, $resource, $amount)
+    public function giftResource(KingdomModel $kingdom, $resource, $amount)
     {
-        $resource = $kingdom->resources()->where("class", $resource)->firstOrCreate([
+        $resource = $kingdom->entity->resources()->where("class", $resource)->firstOrCreate([
             "amount" => 0,
-            "kingdom_id" => $kingdom->id,
+            "kingdom_id" => $kingdom->entity->id,
             "class" => $resource
         ]);
 
@@ -60,8 +61,24 @@ class KingdomService
 
     public function getAuthenticatedKingdom()
     {
+
         $user = auth()->user();
-        return $user->kingdom;
+        if (!$user) {
+            return false;
+        }
+        return ClassSaturator::getModel($user->kingdom);
+    }
+
+    public function getKingdoms()
+    {
+        $kingdoms = Kingdom::all();
+        $return = collect([]);
+
+        foreach ($kingdoms as $kingdom) {
+            $return->push(ClassSaturator::getModel($kingdom));
+        }
+
+        return $return;
     }
 
 }

@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Entities\Building;
-use App\Entities\Kingdom;
+use App\Models\Kingdom;
 use App\Exceptions\Building\CannotUpgradeException;
 use App\Helpers\ClassSaturator;
 use App\Models\Buildings\Library;
@@ -62,7 +62,7 @@ class BuildingService
         // if we can afford/"level" the building, go ahead and build it.
         if ($this->canLevel($kingdom, $model)) {
             $building = new Building();
-            $building->kingdom_id = $kingdom->id;
+            $building->kingdom_id = $kingdom->entity->id;
             $building->level = 1;
             $building->class = get_class($model);
             $building->save();
@@ -95,8 +95,8 @@ class BuildingService
      */
     public function getBuilding(Kingdom $kingdom, $buildingClass)
     {
-        $kingdom = $kingdom->fresh();
-        foreach ($kingdom->buildings as $building) {
+        $kingdom->refreshEntity();
+        foreach ($kingdom->entity->buildings as $building) {
             if ($building->class == $buildingClass) {
                 return ClassSaturator::getModel($building);
             }
@@ -167,7 +167,7 @@ class BuildingService
 
     public function hasBuilding(Kingdom $kingdom, $buildingClass)
     {
-        foreach ($kingdom->buildings as $building) {
+        foreach ($kingdom->entity->buildings as $building) {
             if ($building->class == $buildingClass) {
                 return true;
             }

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Entities\Building;
 use App\Exceptions\Building\CannotUpgradeException;
 use App\Helpers\ClassSaturator;
 use App\Models\Buildings\Library;
@@ -14,9 +13,7 @@ use App\Models\Resources\Wood;
 use App\Services\BuildingService;
 use App\Services\GameService;
 use App\Services\KingdomService;
-use App\User;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BuildingManagementTest extends TestCase
@@ -47,7 +44,8 @@ class BuildingManagementTest extends TestCase
         $this->kingdomService = app()->make(KingdomService::class);
         $this->gameService = app()->make(GameService::class);
         $this->user = factory('App\User')->create();
-        $this->kingdom = factory('App\Entities\Kingdom')->create(['user_id' => $this->user->id]);
+        $kingdom = factory('App\Entities\Kingdom')->create(['user_id' => $this->user->id]);
+        $this->kingdom = ClassSaturator::getModel($kingdom);
     }
 
     /** @test */
@@ -65,7 +63,7 @@ class BuildingManagementTest extends TestCase
         $this->kingdomService->giftResource($this->kingdom, Gold::class, 10000);
         $this->buildingService->constructLibrary($this->kingdom);
         $this->assertInstanceOf(Library::class, $this->buildingService->getBuilding($this->kingdom, Library::class));
-        $this->assertEquals($this->buildingService->getLibrary($this->kingdom)->entity->kingdom_id, $this->kingdom->id);
+        $this->assertEquals($this->buildingService->getLibrary($this->kingdom)->entity->kingdom_id, $this->kingdom->entity->id);
         $this->assertEquals($this->buildingService->getLibrary($this->kingdom)->entity->level, 1);
     }
 
@@ -103,7 +101,8 @@ class BuildingManagementTest extends TestCase
         $this->gameService->processTurn();
         $researchModel = ClassSaturator::instantiateClass(Research::class);
 
-        $this->assertEquals(4, $this->kingdomService->getResourceAmount($this->kingdom->fresh(), $researchModel));
+        $this->kingdom->refreshEntity();
+        $this->assertEquals(4, $this->kingdomService->getResourceAmount($this->kingdom->entity, $researchModel));
     }
 
     /** @test */
@@ -114,7 +113,7 @@ class BuildingManagementTest extends TestCase
         $this->kingdomService->giftResource($this->kingdom, Gold::class, 10000);
         $this->buildingService->constructBuilding($this->kingdom, LumberCamp::class);
         $this->assertInstanceOf(LumberCamp::class, $this->buildingService->getBuilding($this->kingdom, LumberCamp::class));
-        $this->assertEquals($this->buildingService->getBuilding($this->kingdom, LumberCamp::class)->getKingdomId(), $this->kingdom->id);
+        $this->assertEquals($this->buildingService->getBuilding($this->kingdom, LumberCamp::class)->getKingdomId(), $this->kingdom->entity->id);
         $this->assertEquals($this->buildingService->getBuilding($this->kingdom, LumberCamp::class)->getLevel(), 1);
     }
 
