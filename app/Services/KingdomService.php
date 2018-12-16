@@ -10,6 +10,14 @@ use App\Models\Resources\Resource;
 class KingdomService
 {
 
+    /**
+     * Determine if the passed kingdom has the required resources passed in
+     * TODO: refactor cost into a defined model
+     *
+     * @param KingdomModel $kingdom
+     * @param array $cost a simple array of costs
+     * @return bool
+     */
     public function hasResources(KingdomModel $kingdom, $cost)
     {
         foreach ($cost as $class => $val) {
@@ -33,6 +41,13 @@ class KingdomService
         return true;
     }
 
+    /**
+     * Gift the passed kingdom some resources.
+     *
+     * @param KingdomModel $kingdom
+     * @param string $resource class identifier of the resource amount
+     * @param integer $amount
+     */
     public function giftResource(KingdomModel $kingdom, $resource, $amount)
     {
         $resource = $kingdom->entity->resources()->where("class", $resource)->firstOrCreate([
@@ -45,6 +60,13 @@ class KingdomService
         $resource->save();
     }
 
+    /**
+     * Get the amount of passed resource the passed kingdom has
+     *
+     * @param Kingdom $kingdom
+     * @param Resource $resource
+     * @return int
+     */
     public function getResourceAmount(Kingdom $kingdom, Resource $resource)
     {
 
@@ -59,6 +81,11 @@ class KingdomService
         return 0;
     }
 
+    /**
+     * Get the kingdom currently used by the logged in user
+     *
+     * @return bool|KingdomModel
+     */
     public function getAuthenticatedKingdom()
     {
 
@@ -69,6 +96,11 @@ class KingdomService
         return ClassSaturator::getModel($user->kingdom);
     }
 
+    /**
+     * Get all kingdoms as domain models
+     *
+     * @return \Illuminate\Support\Collection[KingdomModel]
+     */
     public function getKingdoms()
     {
         $kingdoms = Kingdom::all();

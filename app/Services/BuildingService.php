@@ -165,6 +165,14 @@ class BuildingService
         return $baseCost;
     }
 
+    /**
+     * Check to see if a kingdom has a specific type of building. Pass in a kingdom model
+     * and a string representing the class of building to check for the presence of.
+     *
+     * @param Kingdom $kingdom
+     * @param $buildingClass
+     * @return bool
+     */
     public function hasBuilding(Kingdom $kingdom, $buildingClass)
     {
         foreach ($kingdom->entity->buildings as $building) {

@@ -13,7 +13,7 @@ abstract class Action
     }
 
     /**
-     * Apply resource to the authenticated kingdom
+     * Execute all the steps added to the action
      */
     abstract function performAction();
 

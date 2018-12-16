@@ -27,6 +27,10 @@ class GameService
         $this->buildingService = $buildingService;
     }
 
+    /**
+     * Generate ticks and run passive actions for all kingdoms.
+     * Chances are this is quite an intensive process!
+     */
     public function processTurn()
     {
         $kingdoms = Kingdom::all();
